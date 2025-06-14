@@ -6,7 +6,11 @@ const cors = require("cors");
 const XLSX = require("xlsx");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5174" }));
+app.use(
+  cors({
+    origin: "'https://nodejs-serverless-function-express-q3vtx5xdr.vercel.app",
+  })
+);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
