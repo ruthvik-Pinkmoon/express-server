@@ -7,11 +7,16 @@ const XLSX = require("xlsx");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://adikavi-nannaya-university.vercel.app",
-  })
-);
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://adikavi-nannaya-university.vercel.app"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
+  next();
+});
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
