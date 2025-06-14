@@ -6,9 +6,10 @@ const cors = require("cors");
 const XLSX = require("xlsx");
 
 const app = express();
+
 app.use(
   cors({
-    origin: "*",
+    origin: "https://adikavi-nannaya-university.vercel.app",
   })
 );
 
