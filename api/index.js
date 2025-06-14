@@ -17,6 +17,10 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 app.post("/upload", upload.any(), (req, res) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://adikavi-nannaya-university.vercel.app"
+  );
   try {
     const fields = {};
     const uploadsFolder = path.join(__dirname, "uploads");
