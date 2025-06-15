@@ -2,7 +2,8 @@
     "rewrites": [
       { "source": "/", "destination": "/api/index.js" },
       { "source": "/upload", "destination": "/api/index.js" },
-      { "source": "/hello", "destination": "/api/index.js" }
+      { "source": "/hello", "destination": "/api/index.js" },
+      { "source": "/get-documents", "destination": "/api/index.js" }
     ]
   }
   

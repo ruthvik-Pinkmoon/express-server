@@ -10,6 +10,9 @@ const app = express();
 const uri = 'mongodb+srv://Tom:Jerry@cluster0.yyxtymq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const client = new MongoClient(uri);
 
+const ADMIN_PASSWORD = "Admin@6734"
+// const CLIENT_DOMAIN = "http://localhost:5173";
+const CLIENT_DOMAIN = "https://adikavi-nannaya-university.vercel.app"
 
 app.use(cors({ origin: "*" }));
 
@@ -17,7 +20,7 @@ app.use(cors({ origin: "*" }));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://adikavi-nannaya-university.vercel.app"
+    CLIENT_DOMAIN
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -28,16 +31,18 @@ app.use((req, res, next) => {
 });
 
 app.get("/hello",(req, res) => {
+  console.log("Hello From terminal")
   res.send("Hello Inegrated MongoDB")
 })
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+// =================================================================================================
 app.post("/upload", upload.any(), async (req, res) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://adikavi-nannaya-university.vercel.app"
+    CLIENT_DOMAIN
   );
   try {
     const fields = {};
@@ -53,6 +58,9 @@ app.post("/upload", upload.any(), async (req, res) => {
     for (const key in req.files) {
       fields.files[key] = req.files[key];
     }
+
+    fields.createdAt = new Date();
+
     await client.connect();
     const db = client.db('myDatabase'); // choose a DB name
     const collection = db.collection('myCollection'); // choose a collection
@@ -60,7 +68,11 @@ app.post("/upload", upload.any(), async (req, res) => {
     const result = await collection.insertOne(fields);
     if(result.insertedId) {
       console.log("Uploaded Documeny ID",result.insertedId);
-      res.send("Submission successful");
+      res.status(200).send({success: true,message:"Submission successful",doc_id:result.insertedId, createdAt: fields.createdAt});
+      return;
+    } else {
+      console.log("Upload Failed",result);
+      res.status(500).send({success: false, message:"Submission failed"});
       return;
     }
 
@@ -109,10 +121,13 @@ app.post("/upload", upload.any(), async (req, res) => {
   }
 });
 
-app.post('/get-documents', async (req, res) => {
-  const { adminPassword, limit, startDate, endDate } = req.body;
+// =================================================================================================
+app.post('/get-documents', upload.any(),async (req, res) => {
+  console.log("New Post Request '/get-documents'",req.body)
+  req.body = JSON.parse(req.body.data);
+  const { adminPassword, limit, startDate, endDate, name, mobileNumber } = req.body;
 
-  if (adminPassword !== "Admin@5945") {
+  if (adminPassword !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -123,12 +138,27 @@ app.post('/get-documents', async (req, res) => {
 
     const query = {};
     const sort = { _id: -1 };
+    const orConditions = [];
+
 
     if (startDate || endDate) {
-      query.dob = {};
-      if (startDate) query.dob.$gte = startDate;
-      if (endDate) query.dob.$lte = endDate;
+      query.createdAt = {};
+      if (startDate) query.createdAt.$gte = startDate;
+      if (endDate) query.createdAt.$lte = endDate;
     }
+
+    if (name) {
+      orConditions.push({ name: { $regex: new RegExp(name, "i") } });
+    }
+
+    if (mobileNumber) {
+      orConditions.push({ mobileNumber: { $regex: new RegExp(mobileNumber, "i") } });
+    }
+
+    if (orConditions.length > 0) {
+      query.$or = orConditions;
+    }
+
 
     const docs = await collection.find(query).sort(sort).limit(limit || 50).toArray();
     res.status(200).json({ success: true, data: docs });
@@ -142,3 +172,4 @@ app.post('/get-documents', async (req, res) => {
 
 
 module.exports = app;
+app.listen(3000)
