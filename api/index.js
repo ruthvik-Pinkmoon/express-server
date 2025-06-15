@@ -4,8 +4,11 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const XLSX = require("xlsx");
+const { MongoClient } = require('mongodb');
 
 const app = express();
+const uri = 'mongodb+srv://Tom:Jerry@cluster0.yyxtymq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const client = new MongoClient(uri);
 
 
 app.use(cors({ origin: "*" }));
@@ -26,7 +29,7 @@ app.use((req, res, next) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-app.post("/upload", upload.any(), (req, res) => {
+app.post("/upload", upload.any(), async (req, res) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
     "https://adikavi-nannaya-university.vercel.app"
@@ -40,6 +43,16 @@ app.post("/upload", upload.any(), (req, res) => {
 
     for (const key in req.body) {
       fields[key] = req.body[key];
+    }
+    await client.connect();
+    const db = client.db('myDatabase'); // choose a DB name
+    const collection = db.collection('myCollection'); // choose a collection
+
+    const result = await collection.insertOne(fields);
+    if(result.insertedId) {
+      console.log("Uploaded Documeny ID",result.insertedId);
+      res.send("Submission successful");
+      return;
     }
 
     const folderName = fields.name.trim().replace(/\s+/g, "_");
