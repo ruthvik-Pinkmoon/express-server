@@ -49,6 +49,9 @@ app.post("/upload", upload.any(), async (req, res) => {
     for (const key in req.body) {
       fields[key] = req.body[key];
     }
+    for (const key in req.files) {
+      fields[key] = req.files[key];
+    }
     await client.connect();
     const db = client.db('myDatabase'); // choose a DB name
     const collection = db.collection('myCollection'); // choose a collection
