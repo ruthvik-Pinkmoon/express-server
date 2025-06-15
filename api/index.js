@@ -13,6 +13,7 @@ const client = new MongoClient(uri);
 
 app.use(cors({ origin: "*" }));
 
+
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -25,6 +26,10 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.get("/hello",(req, res) => {
+  res.send("Hello Inegrated MongoDB")
+})
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
