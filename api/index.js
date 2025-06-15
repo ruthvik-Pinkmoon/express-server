@@ -109,4 +109,36 @@ app.post("/upload", upload.any(), async (req, res) => {
   }
 });
 
+app.post('/get-documents', async (req, res) => {
+  const { adminPassword, limit, startDate, endDate } = req.body;
+
+  if (adminPassword !== "Admin@5945") {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    await client.connect();
+    const db = client.db('myDatabase');
+    const collection = db.collection('myCollection');
+
+    const query = {};
+    const sort = { _id: -1 };
+
+    if (startDate || endDate) {
+      query.dob = {};
+      if (startDate) query.dob.$gte = startDate;
+      if (endDate) query.dob.$lte = endDate;
+    }
+
+    const docs = await collection.find(query).sort(sort).limit(limit || 50).toArray();
+    res.status(200).json({ success: true, data: docs });
+  } catch (error) {
+    console.error('Error retrieving documents:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    await client.close();
+  }
+});
+
+
 module.exports = app;
