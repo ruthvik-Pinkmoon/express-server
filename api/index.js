@@ -16,7 +16,6 @@ const CLIENT_DOMAIN = "https://adikavi-nannaya-university.vercel.app"
 
 app.use(cors({ origin: "*" }));
 
-
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
