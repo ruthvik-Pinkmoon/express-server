@@ -14,13 +14,13 @@ const ADMIN_PASSWORD = "Admin@6734"
 // const CLIENT_DOMAIN = "http://localhost:5173";
 const CLIENT_DOMAIN = "https://adikavi-nannaya-university.vercel.app"
 
-app.use(cors({ origin: CLIENT_DOMAIN }));
+app.use(cors({ origin: "*" }));
 
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    CLIENT_DOMAIN
-    // "*"
+    // CLIENT_DOMAIN
+    "*"
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -42,7 +42,8 @@ const upload = multer({ storage });
 app.post("/upload", upload.any(), async (req, res) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    CLIENT_DOMAIN
+    // CLIENT_DOMAIN
+"*"
   );
   try {
     const fields = {};
