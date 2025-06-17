@@ -14,7 +14,7 @@ const ADMIN_PASSWORD = "Admin@6734"
 // const CLIENT_DOMAIN = "http://localhost:5173";
 const CLIENT_DOMAIN = "https://adikavi-nannaya-university.vercel.app"
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: CLIENT_DOMAIN }));
 
 app.use((req, res, next) => {
   res.setHeader(
