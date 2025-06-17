@@ -11,7 +11,7 @@ const commonSchema = new mongoose.Schema({
     type: Date,
   },
   file: {
-    type: String,
+    type: mongoose.Schema.Types.Buffer,
   },
   link: {
     type: String,
