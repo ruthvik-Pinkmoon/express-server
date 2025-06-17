@@ -13,6 +13,17 @@ const examNotificationsRouter = require("./5_Exam_Notifications");
 const examTimeTableRouter = require("./5_Exam_TimeTable");
 const examJumblingCentersRouter = require("./5_Exam_JumblingCenters");
 
+const resourceNames = [
+    "results",
+    "circular",
+    "jobs",
+    "tenders",
+    "exam_applications",
+    "exam_jumblingcenters",
+    "exam_notifications",
+    "exam_timetable",
+]
+
 // Mount all under /info
 router.use("/info", resultsRouter);
 router.use("/info", circularRouter);
