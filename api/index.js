@@ -20,8 +20,8 @@ app.use(cors({ origin: "*" }));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    // CLIENT_DOMAIN
-    "*"
+    CLIENT_DOMAIN
+    // "*"
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
