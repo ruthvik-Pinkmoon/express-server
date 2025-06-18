@@ -79,6 +79,12 @@ router.get("/results/recent/:n", async (req, res) => {
     try {
         const n = parseInt(req.params.n) || 5;
         const results = await Model_Result.find()
+            .select({
+                _id: 1,
+                title: 1,
+                date: 1,
+                "file.originalname": 1,
+            })
             .sort({ createdAt: -1 })
             .limit(n);
         res.json(results);
@@ -106,9 +112,15 @@ router.post("/results", async (req, res) => {
 router.patch("/results/:dbid", async (req, res) => {
     console.log("Info-Results-PATCH");
     try {
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        if(fields?.file && !fields?.file?.originalname){
+            delete fields.file
+        }
         const updated = await Model_Result.findByIdAndUpdate(
             req.params.dbid,
-            req.body,
+            { $set: fields },
             { new: true }
         );
         res.json(updated);

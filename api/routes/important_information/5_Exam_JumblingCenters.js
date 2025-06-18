@@ -66,7 +66,12 @@ router.get("/exam_jumblingcenters/file/download/:dbid", async (req, res) => {
 router.get("/exam_jumblingcenters/all", async (req, res) => {
     console.log("Info-Exam_JumblingCenters::All-GET");
     try {
-        const data = await Model_ExamJumblingCenters.find();
+        const data = await Model_ExamJumblingCenters.find().select({
+            _id: 1,
+            title: 1,
+            date: 1,
+            "file.originalname": 1,
+        });
         res.json(data);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -78,6 +83,12 @@ router.get("/exam_jumblingcenters/recent/:n", async (req, res) => {
     try {
         const n = parseInt(req.params.n) || 5;
         const data = await Model_ExamJumblingCenters.find()
+            .select({
+                _id: 1,
+                title: 1,
+                date: 1,
+                "file.originalname": 1,
+            })
             .sort({ createdAt: -1 })
             .limit(n);
         res.json(data);
@@ -99,9 +110,15 @@ router.post("/exam_jumblingcenters", async (req, res) => {
 router.patch("/exam_jumblingcenters/:dbid", async (req, res) => {
     console.log("Info-Exam_JumblingCenters-PATCH");
     try {
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        if (fields?.file && !fields?.file?.originalname) {
+            delete fields.file;
+        }
         const updated = await Model_ExamJumblingCenters.findByIdAndUpdate(
             req.params.dbid,
-            req.body,
+            { $set: fields },
             { new: true }
         );
         res.json(updated);
