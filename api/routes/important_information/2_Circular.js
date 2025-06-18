@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { Model_Circular } = require("../../models/Important_Information");
+const { Model_Circulars } = require("../../models/Important_Information");
 
 router.get("/circular/file/view/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_Circular.findById(req.params.dbid).select({
+        const fileDoc = await Model_Circulars.findById(req.params.dbid).select({
             file: 1,
         });
 
@@ -32,7 +32,7 @@ router.get("/circular/file/view/:dbid", async (req, res) => {
 
 router.get("/circular/file/download/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_Circular.findById(req.params.dbid).select({
+        const fileDoc = await Model_Circulars.findById(req.params.dbid).select({
             file: 1,
         }); // no .lean()
 
@@ -60,7 +60,7 @@ router.get("/circular/file/download/:dbid", async (req, res) => {
 router.get("/circular/all", async (req, res) => {
     console.log("Info-Circular::All-GET");
     try {
-        const data = await Model_Circular.find().select({
+        const data = await Model_Circulars.find().select({
             _id: 1,
             title: 1,
             date: 1,
@@ -76,7 +76,7 @@ router.get("/circular/recent/:n", async (req, res) => {
     console.log("Info-Circular::Recent-GET");
     try {
         const n = parseInt(req.params.n) || 5;
-        const data = await Model_Circular.find()
+        const data = await Model_Circulars.find()
             .select({
                 _id: 1,
                 title: 1,
@@ -94,8 +94,12 @@ router.get("/circular/recent/:n", async (req, res) => {
 router.post("/circular", async (req, res) => {
     console.log("Info-Circular-POST");
     try {
-        const created = await new Model_Circular(req.body).save();
-        res.status(201).json(created);
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        const result = new Model_Circulars(fields);
+        const saved = await result.save();
+        res.status(201).json(saved);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -110,7 +114,7 @@ router.patch("/circular/:dbid", async (req, res) => {
         if (fields?.file && !fields?.file?.originalname) {
             delete fields.file;
         }
-        const updated = await Model_Circular.findByIdAndUpdate(
+        const updated = await Model_Circulars.findByIdAndUpdate(
             req.params.dbid,
             { $set: fields },
             { new: true }
@@ -124,7 +128,7 @@ router.patch("/circular/:dbid", async (req, res) => {
 router.delete("/circular/:dbid", async (req, res) => {
     console.log("Info-Circular-DELETE");
     try {
-        await Model_Circular.findByIdAndDelete(req.params.dbid);
+        await Model_Circulars.findByIdAndDelete(req.params.dbid);
         res.json({ message: "Deleted successfully" });
     } catch (err) {
         res.status(400).json({ error: err.message });

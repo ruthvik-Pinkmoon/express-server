@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { Model_ExamTimeTable } = require("../../models/Important_Information");
+const { Model_ExamTimeTables } = require("../../models/Important_Information");
 
 router.get("/exam_timetable/file/view/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_ExamTimeTable.findById(
+        const fileDoc = await Model_ExamTimeTables.findById(
             req.params.dbid
         ).select({
             file: 1,
@@ -34,7 +34,7 @@ router.get("/exam_timetable/file/view/:dbid", async (req, res) => {
 
 router.get("/exam_timetable/file/download/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_ExamTimeTable.findById(
+        const fileDoc = await Model_ExamTimeTables.findById(
             req.params.dbid
         ).select({
             file: 1,
@@ -64,7 +64,7 @@ router.get("/exam_timetable/file/download/:dbid", async (req, res) => {
 router.get("/exam_timetable/all", async (req, res) => {
     console.log("Info-Exam_TimeTable::All-GET");
     try {
-        const data = await Model_ExamTimeTable.find().select({
+        const data = await Model_ExamTimeTables.find().select({
             _id: 1,
             title: 1,
             date: 1,
@@ -80,7 +80,7 @@ router.get("/exam_timetable/recent/:n", async (req, res) => {
     console.log("Info-Exam_TimeTable::Recent-GET");
     try {
         const n = parseInt(req.params.n) || 5;
-        const data = await Model_ExamTimeTable.find()
+        const data = await Model_ExamTimeTables.find()
             .select({
                 _id: 1,
                 title: 1,
@@ -98,8 +98,12 @@ router.get("/exam_timetable/recent/:n", async (req, res) => {
 router.post("/exam_timetable", async (req, res) => {
     console.log("Info-Exam_TimeTable-POST");
     try {
-        const created = await new Model_ExamTimeTable(req.body).save();
-        res.status(201).json(created);
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        const result = new Model_ExamTimeTables(fields);
+        const saved = await result.save();
+        res.status(201).json(saved);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -114,7 +118,7 @@ router.patch("/exam_timetable/:dbid", async (req, res) => {
         if (fields?.file && !fields?.file?.originalname) {
             delete fields.file;
         }
-        const updated = await Model_ExamTimeTable.findByIdAndUpdate(
+        const updated = await Model_ExamTimeTables.findByIdAndUpdate(
             req.params.dbid,
             { $set: fields },
             { new: true }
@@ -128,7 +132,7 @@ router.patch("/exam_timetable/:dbid", async (req, res) => {
 router.delete("/exam_timetable/:dbid", async (req, res) => {
     console.log("Info-Exam_TimeTable-DELETE");
     try {
-        await Model_ExamTimeTable.findByIdAndDelete(req.params.dbid);
+        await Model_ExamTimeTables.findByIdAndDelete(req.params.dbid);
         res.json({ message: "Deleted successfully" });
     } catch (err) {
         res.status(400).json({ error: err.message });

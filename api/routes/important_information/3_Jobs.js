@@ -94,8 +94,12 @@ router.get("/jobs/recent/:n", async (req, res) => {
 router.post("/jobs", async (req, res) => {
     console.log("Info-Jobs-POST");
     try {
-        const created = await new Model_Jobs(req.body).save();
-        res.status(201).json(created);
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        const result = new Model_Jobs(fields);
+        const saved = await result.save();
+        res.status(201).json(saved);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
