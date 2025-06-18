@@ -6,6 +6,10 @@ const notificationrouter = require("./routes/notificationsRoute");
 const newsRoute = require("./routes/newsRoutes");
 const eventRoute = require("./routes/eventsRoute");
 const voiceRoute = require("./routes/voiceRoute");
+const multer = require("multer")
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 
 const app = express();
 app.use(cors());
@@ -26,7 +30,10 @@ app.use("/api/notifications",notificationrouter)
 app.use("/api/news",newsRoute)
 app.use("/api/event",eventRoute)
 app.use("/api/voices-at-aknu",voiceRoute)
-
+;
+app.use("/api/upload", require("./routes/formUpload/upload"));
+app.use("/api/get-documents", require("./routes/formUpload/getDocuments"));
+app.use("/api/info", upload.any(), require("./routes/important_information"));
 
 
 module.exports = app;

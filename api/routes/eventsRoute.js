@@ -41,6 +41,22 @@ eventRoute.get("/", async (req, res) => {
   }
 });
 
+eventRoute.get("/file/:id", async (req, res) => {
+  try {
+    const event = await eventSchema.findById(req.params.id);
+
+    if (!event || !event.file) {
+      return res.status(404).json({ error: "File not found." });
+    }
+
+    res.set("Content-Type", event.file.contentType);
+    res.send(event.file.data);
+  } catch (err) {
+    console.error("File Fetch Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 // CREATE new event (already done, here for reference)
 eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => {
   try {
