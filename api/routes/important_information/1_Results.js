@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { Model_Result } = require("../../models/Important_Information.js");
+const { Model_Results } = require("../../models/Important_Information.js");
 
 router.get("/results/file/view/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_Result.findById(req.params.dbid).select({
+        const fileDoc = await Model_Results.findById(req.params.dbid).select({
             file: 1,
         });
 
@@ -32,7 +32,7 @@ router.get("/results/file/view/:dbid", async (req, res) => {
 
 router.get("/results/file/download/:dbid", async (req, res) => {
     try {
-        const fileDoc = await Model_Result.findById(req.params.dbid).select({
+        const fileDoc = await Model_Results.findById(req.params.dbid).select({
             file: 1,
         }); // no .lean()
 
@@ -61,7 +61,7 @@ router.get("/results/file/download/:dbid", async (req, res) => {
 router.get("/results/all", async (req, res) => {
     console.log("Info-Results::All-GET");
     try {
-        const results = await Model_Result.find().select({
+        const results = await Model_Results.find().select({
             _id: 1,
             title: 1,
             date: 1,
@@ -78,7 +78,13 @@ router.get("/results/recent/:n", async (req, res) => {
     console.log("Info-Results::Recent-GET");
     try {
         const n = parseInt(req.params.n) || 5;
-        const results = await Model_Result.find()
+        const results = await Model_Results.find()
+            .select({
+                _id: 1,
+                title: 1,
+                date: 1,
+                "file.originalname": 1,
+            })
             .sort({ createdAt: -1 })
             .limit(n);
         res.json(results);
@@ -94,7 +100,7 @@ router.post("/results", async (req, res) => {
         const fields = {};
         for (const key in req.body) fields[key] = req.body[key];
         if (req?.files?.length) fields.file = req?.files[0];
-        const result = new Model_Result(fields);
+        const result = new Model_Results(fields);
         const saved = await result.save();
         res.status(201).json(saved);
     } catch (err) {
@@ -106,9 +112,15 @@ router.post("/results", async (req, res) => {
 router.patch("/results/:dbid", async (req, res) => {
     console.log("Info-Results-PATCH");
     try {
-        const updated = await Model_Result.findByIdAndUpdate(
+        const fields = {};
+        for (const key in req.body) fields[key] = req.body[key];
+        if (req?.files?.length) fields.file = req?.files[0];
+        if(fields?.file && !fields?.file?.originalname){
+            delete fields.file
+        }
+        const updated = await Model_Results.findByIdAndUpdate(
             req.params.dbid,
-            req.body,
+            { $set: fields },
             { new: true }
         );
         res.json(updated);
@@ -120,7 +132,7 @@ router.patch("/results/:dbid", async (req, res) => {
 router.delete("/results/:dbid", async (req, res) => {
     console.log("Info-Results-DELETE");
     try {
-        await Model_Result.findByIdAndDelete(req.params.dbid);
+        await Model_Results.findByIdAndDelete(req.params.dbid);
         res.json({ message: "Deleted successfully" });
     } catch (err) {
         res.status(400).json({ error: err.message });

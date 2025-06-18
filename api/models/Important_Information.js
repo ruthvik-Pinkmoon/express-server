@@ -26,50 +26,50 @@ const commonSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const Model_Result = mongoose.model(
-    "Model_Result",
+const Model_Results = mongoose.model(
+    "Model_Results",
     commonSchema,
-    "Model_Result"
+    "Model_Results"
 );
-const Model_Circular = mongoose.model(
-    "Model_Circular",
+const Model_Circulars = mongoose.model(
+    "Model_Circulars",
     commonSchema,
-    "Model_Circular"
+    "Model_Circulars"
 );
-const Model_Job = mongoose.model("Model_Job", commonSchema, "Model_Job");
+const Model_Jobs = mongoose.model("Model_Jobs", commonSchema, "Model_Jobs");
 const Model_Tenders = mongoose.model(
     "Model_Tenders",
     commonSchema,
     "Model_Tenders"
 );
-const Model_ExamApplication = mongoose.model(
-    "Model_ExamApplication",
+const Model_ExamApplications = mongoose.model(
+    "Model_ExamApplications",
     commonSchema,
-    "Model_ExamApplication"
+    "Model_ExamApplications"
 );
-const Model_ExamNotification = mongoose.model(
-    "Model_ExamNotification",
+const Model_ExamNotifications = mongoose.model(
+    "Model_ExamNotifications",
     commonSchema,
-    "Model_ExamNotification"
+    "Model_ExamNotifications"
 );
-const Model_ExamTimeTable = mongoose.model(
-    "Model_ExamTimeTable",
+const Model_ExamTimeTables = mongoose.model(
+    "Model_ExamTimeTables",
     commonSchema,
-    "Model_ExamTimeTable"
+    "Model_ExamTimeTables"
 );
-const Model_ExamJumblingCenter = mongoose.model(
-    "Model_ExamJumblingCenter",
+const Model_ExamJumblingCenters = mongoose.model(
+    "Model_ExamJumblingCenters",
     commonSchema,
-    "Model_ExamJumblingCenter"
+    "Model_ExamJumblingCenters"
 );
 
 module.exports = {
-    Model_Result,
-    Model_Circular,
-    Model_Job,
+    Model_Results,
+    Model_Circulars,
+    Model_Jobs,
     Model_Tenders,
-    Model_ExamApplication,
-    Model_ExamNotification,
-    Model_ExamTimeTable,
-    Model_ExamJumblingCenter,
+    Model_ExamApplications,
+    Model_ExamNotifications,
+    Model_ExamTimeTables,
+    Model_ExamJumblingCenters,
 };

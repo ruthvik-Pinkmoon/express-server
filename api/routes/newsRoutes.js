@@ -60,6 +60,7 @@ newsRoute.post("/create-new-news", upload.single("file"), async (req, res) => {
 
     const newnews = new newsSchema({
       title,
+     
       description,
       date: new Date(date),
       file: {
@@ -85,7 +86,7 @@ newsRoute.put("/update-news/:id", upload.single("file"), async (req, res) => {
   try {
     const { title, description, date } = req.body;
 
-    const updateData = { title, description, date: new Date(date) };
+    const updateData = { title,description, date: new Date(date) };
 
     if (req.file) {
       // Only if new file is uploaded

@@ -60,7 +60,7 @@ eventRoute.get("/file/:id", async (req, res) => {
 // CREATE new event (already done, here for reference)
 eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => {
   try {
-    const { title, description ,date} = req.body;
+    const { title,location, description ,date} = req.body;
 
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded." });
@@ -68,6 +68,7 @@ eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => 
 
     const newEvent = new eventSchema({
       title,
+      location,
       description,
       date: new Date(date),
       file: {
@@ -89,9 +90,9 @@ eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => 
 // UPDATE event
 eventRoute.put("/update-event/:id", upload.single("file"), async (req, res) => {
   try {
-    const { title, description,date } = req.body;
+    const { title, location,description,date } = req.body;
 
-    const updateData = { title, description, date: new Date(date)  };
+    const updateData = { title,location, description, date: new Date(date)  };
 
     if (req.file) {  // Only if new file is uploaded
       updateData.file = {
