@@ -25,15 +25,15 @@ const resourceNames = [
 ]
 
 // Mount all under /info
-router.use("/info", resultsRouter);
-router.use("/info", circularRouter);
-router.use("/info", jobsRouter);
-router.use("/info", tendersRouter);
-router.use("/info", examApplicationsRouter);
-router.use("/info", examNotificationsRouter);
-router.use("/info", examTimeTableRouter);
-router.use("/info", examJumblingCentersRouter);
-router.get("/info", (req, res) => {
+router.use("/", resultsRouter);
+router.use("/", circularRouter);
+router.use("/", jobsRouter);
+router.use("/", tendersRouter);
+router.use("/", examApplicationsRouter);
+router.use("/", examNotificationsRouter);
+router.use("/", examTimeTableRouter);
+router.use("/", examJumblingCentersRouter);
+router.get("/", (req, res) => {
     console.log("Important_Information---GET");
     res.json({ message: "This is Important Inforamation" });
 });
