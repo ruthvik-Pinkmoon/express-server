@@ -7,11 +7,13 @@ const notificationrouter = require("./routes/notificationsRoute");
 const newsRoute = require("./routes/newsRoutes");
 const eventRoute = require("./routes/eventsRoute");
 const voiceRoute = require("./routes/voiceRoute");
+const corsMiddleware = require("./middlewares/cors");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(corsMiddleware)
 
 mongoose
   .connect(process.env.MONGO_DB, {
@@ -21,7 +23,7 @@ mongoose
   .then(() => console.log("MongoDB connected successfully!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use(cors({ origin: true, credentials: true, origin: "*" }));
+// app.use(cors({ origin: true, credentials: true, origin: "*" }));
 app.use(express.json());
 
 app.use("/api/login", require("./routes/auth/login"));
