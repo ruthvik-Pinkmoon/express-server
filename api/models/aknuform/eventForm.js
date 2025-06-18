@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const eventFormSchema = new mongoose.Schema({
+  eventTitle:{ type: String, required: true },
   name: { type: String, required: true },
   registrationNumber: { type: String, required: true },
 
