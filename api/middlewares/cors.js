@@ -1,5 +1,5 @@
 const cors = require("cors");
-const { ADMIN_URL, LOCAL_ENV } = require("../config/clientUrls");
+const { ADMIN_URL, LOCAL_ENV, CLIENT_URL } = require("../config/clientUrls");
 
 const allowedOrigins = [
   CLIENT_URL,
