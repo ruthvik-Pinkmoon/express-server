@@ -12,6 +12,7 @@ const addisomFormSchema = new mongoose.Schema({
   qualification: { type: String, required: true },
   preferredCourse: { type: String, required: true },
   preferredCampus: { type: String, required: true },
+  decision: { type: String, default:"pending"},
   message: { type: String }
 });
 

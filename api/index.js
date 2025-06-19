@@ -8,8 +8,13 @@ const newsRoute = require("./routes/newsRoutes");
 const eventRoute = require("./routes/eventsRoute");
 const voiceRoute = require("./routes/voiceRoute");
 const eventFormRouter = require("./routes/aknuform/eventForm");
-const addisomFormRouter = require("./routes/aknuform/addisomFormRouter");
+
 const corsMiddleware = require("./middlewares/cors");
+const certificateRoutes = require("./routes/aknuform/certificationRoute");
+
+const alumniRoute = require("./routes/aknuform/alumniRoute");
+const feedbackRoute = require("./routes/aknuform/feedbackRoute");
+const addisomFormRouter = require("./routes/aknuform/admissionFormRouter");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -40,9 +45,12 @@ app.use("/api/get-documents", require("./routes/formUpload/getDocuments"));
 app.use("/api/info", upload.any(), require("./routes/important_information"));
 
 app.use("/api/info", upload.any(), require("./routes/important_information"));
-app.use("/api/form-upload",eventFormRouter)
 
+app.use("/api/form-upload",eventFormRouter)
 app.use("/api/admission-form", addisomFormRouter);
+app.use("/api/certification-form", certificateRoutes);
+app.use("/api/alumni-form",alumniRoute );
+app.use("/api/feedback-form",feedbackRoute );
 
 module.exports = app;
 app.listen(3000)

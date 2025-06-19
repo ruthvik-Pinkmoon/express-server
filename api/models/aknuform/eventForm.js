@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 
 const eventFormSchema = new mongoose.Schema({
-  eventTitle:{ type: String, required: true },
+  eventTitle: { type: String, required: true },
   name: { type: String, required: true },
-  registrationNumber: { type: String, required: true },
-
+ 
+  decision: { type: String, default:"pending"},
   location: { type: String, required: true },
-  branch: { type: String, required: true },
+  occupation: { type: String, required: true },
+  
   phoneNumber: { type: String, required: true },
 });
 
