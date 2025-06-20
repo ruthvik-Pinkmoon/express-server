@@ -3,7 +3,7 @@ const multer = require("multer");
 const { MongoClient } = require("mongodb");
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage() });   
 
 const client = new MongoClient(process.env.MONGO_DB);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
