@@ -7,6 +7,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const client = new MongoClient(process.env.MONGO_DB);
 const CLIENT_DOMAIN = process.env.CLIENT_DOMAIN;
+const MONDODB_DB_NAME = process.env.MONDODB_DB_NAME;
+const MONGO_DB_COLLECTION = process.env.MONGO_DB_COLLECTION;
 
 router.post("/", upload.any(), async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", CLIENT_DOMAIN);
@@ -21,8 +23,8 @@ router.post("/", upload.any(), async (req, res) => {
     fields.createdAt = new Date();
 
     await client.connect();
-    const db = client.db("aknu_db_2025");
-    const collection = db.collection("aknu_form_upload");
+    const db = client.db(MONDODB_DB_NAME);
+    const collection = db.collection(MONGO_DB_COLLECTION);
 
     const result = await collection.insertOne(fields);
 

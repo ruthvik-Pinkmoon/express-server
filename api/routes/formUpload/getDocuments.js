@@ -8,6 +8,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const client = new MongoClient(process.env.MONGO_DB);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const MONDODB_DB_NAME = process.env.MONDODB_DB_NAME;
+const MONGO_DB_COLLECTION = process.env.MONGO_DB_COLLECTION;
 
 router.post("/", upload.any(), async (req, res) => {
   console.log("___coneectiom success")
@@ -22,7 +23,7 @@ router.post("/", upload.any(), async (req, res) => {
   try {
     await client.connect();
     const db = client.db(MONDODB_DB_NAME);
-    const collection = db.collection("aknu_form_upload");
+    const collection = db.collection(MONGO_DB_COLLECTION);
     const query = {};
     const orConditions = [];
 
