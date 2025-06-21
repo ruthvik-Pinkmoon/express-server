@@ -15,6 +15,8 @@ const certificateRoutes = require("./routes/aknuform/certificationRoute");
 const alumniRoute = require("./routes/aknuform/alumniRoute");
 const feedbackRoute = require("./routes/aknuform/feedbackRoute");
 const addisomFormRouter = require("./routes/aknuform/admissionFormRouter");
+const otprouter = require("./routes/chatwithus/otpRoute");
+const chatrouter = require("./routes/chatwithus/chatWithUs");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -51,6 +53,8 @@ app.use("/api/admission-form", addisomFormRouter);
 app.use("/api/certification-form", certificateRoutes);
 app.use("/api/alumni-form",alumniRoute );
 app.use("/api/feedback-form",feedbackRoute );
+app.use("/api/otp",otprouter)
+app.use("/api/chat-with-us",chatrouter)
 
 module.exports = app;
 app.listen(3000)
