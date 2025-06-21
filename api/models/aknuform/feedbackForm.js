@@ -7,6 +7,6 @@ const feedbackFormSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   feedback: { type: String, required: true },
   contact: { type: Boolean, required: true } // If the user wants to be contacted
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('FeedbackForm', feedbackFormSchema,'FeedbackForm');

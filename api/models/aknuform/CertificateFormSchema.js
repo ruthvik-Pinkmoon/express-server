@@ -20,6 +20,6 @@ const applyCertificateFormSchema = new mongoose.Schema({
     fileName: String
   },
   termsAccepted: { type: Boolean, required: true }
-});
+}, { timestamps: true })
 
 module.exports = mongoose.model('ApplyCertificateForm', applyCertificateFormSchema,'ApplyCertificateForm');

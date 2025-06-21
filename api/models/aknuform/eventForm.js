@@ -9,6 +9,6 @@ const eventFormSchema = new mongoose.Schema({
   occupation: { type: String, required: true },
   
   phoneNumber: { type: String, required: true },
-});
+} ,{ timestamps: true })
 
 module.exports = mongoose.model("eventsForm", eventFormSchema, "eventForm");

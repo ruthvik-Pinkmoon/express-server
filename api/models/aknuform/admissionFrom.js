@@ -12,8 +12,8 @@ const addisomFormSchema = new mongoose.Schema({
   qualification: { type: String, required: true },
   preferredCourse: { type: String, required: true },
   preferredCampus: { type: String, required: true },
-  decision: { type: String, default:"pending"},
+  decision: { type: String, default: "pending" },
   message: { type: String }
-});
+}, { timestamps: true }); // 👈 Added this line
 
 module.exports = mongoose.model("addisomForm", addisomFormSchema, "addisomForm");

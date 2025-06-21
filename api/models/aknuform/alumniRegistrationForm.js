@@ -7,6 +7,6 @@ const alumniRegistrationFormSchema = new mongoose.Schema({
   branch: { type: String, required: true },
   email: { type: String, required: true },
   currentOccupation: { type: String, required: true }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('AlumniRegistrationForm', alumniRegistrationFormSchema,"AlumniRegistrationForm");
