@@ -10,7 +10,7 @@ router.get("/exam_jumblingcenters/file/view/:dbid", async (req, res) => {
             req.params.dbid
         ).select({
             file: 1,
-        });
+        }); 
 
         if (!fileDoc || !fileDoc.file || !fileDoc.file.buffer) {
             return res.status(404).send("File not found");

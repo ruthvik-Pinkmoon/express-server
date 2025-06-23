@@ -3,22 +3,16 @@ const multer = require("multer");
 const { MongoClient } = require("mongodb");
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });   
+const upload = multer({ storage: multer.memoryStorage() });
 
 const client = new MongoClient(process.env.MONGO_DB);
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const MONDODB_DB_NAME = process.env.MONDODB_DB_NAME;
-const MONGO_DB_COLLECTION = process.env.MONGO_DB_COLLECTION;
+const MONDODB_DB_NAME = "myDatabase"; // Replace with your actual database name
+const MONGO_DB_COLLECTION = "myCollection"; // Replace with your actual collection name
 
 router.post("/", upload.any(), async (req, res) => {
-  console.log("___coneectiom success")
-  req.body = JSON.parse(req.body.data);
-  const { adminPassword, limit, startDate, endDate, name, mobileNumber } =
-    req.body;
-
-  if (adminPassword !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  console.log("___coneectiom success");
+  
+  const { limit, startDate, endDate, name, mobileNumber } = req.body;
 
   try {
     await client.connect();
@@ -52,6 +46,7 @@ router.post("/", upload.any(), async (req, res) => {
       .sort({ _id: -1 })
       .limit(limit || 50)
       .toArray();
+      console.log("Documents fetched:", docs.length);
     res.status(200).json({ success: true, data: docs });
   } catch (err) {
     console.error("Fetch Error:", err);

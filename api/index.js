@@ -17,6 +17,7 @@ const feedbackRoute = require("./routes/aknuform/feedbackRoute");
 const addisomFormRouter = require("./routes/aknuform/admissionFormRouter");
 const otprouter = require("./routes/chatwithus/otpRoute");
 const chatrouter = require("./routes/chatwithus/chatWithUs");
+const authenticationRouter = require("./routes/authentication/authenticationRoute");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -32,7 +33,6 @@ mongoose
   .then(() => console.log("MongoDB connected successfully!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// app.use(cors({ origin: true, credentials: true, origin: "*" }));
 app.use(express.json());
 
 app.use("/api/login", require("./routes/auth/login"));
@@ -55,6 +55,7 @@ app.use("/api/alumni-form",alumniRoute );
 app.use("/api/feedback-form",feedbackRoute );
 app.use("/api/otp",otprouter)
 app.use("/api/chat-with-us",chatrouter)
+app.use("/api/authentication", authenticationRouter);
 
 module.exports = app;
 app.listen(3000)
