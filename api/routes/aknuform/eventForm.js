@@ -1,10 +1,11 @@
 const express = require("express");
 const eventFormSchema = require("../../models/aknuform/eventForm");
+const authenticationMiddleware = require("../../middlewares/authentication");
 
 const eventFormRouter = express.Router();
 
 // POST request to create a new event form entry
-eventFormRouter.post("/create-new-form", async (req, res) => {
+eventFormRouter.post("/create-new-form",authenticationMiddleware, async (req, res) => {
   try {
     const newForm = new eventFormSchema(req.body);
     const savedForm = await newForm.save();
@@ -15,7 +16,7 @@ eventFormRouter.post("/create-new-form", async (req, res) => {
 });
 
 // PUT request to update decision status
-eventFormRouter.put("/update-decision/:id", async (req, res) => {
+eventFormRouter.put("/update-decision/:id",authenticationMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const { action } = req.query;

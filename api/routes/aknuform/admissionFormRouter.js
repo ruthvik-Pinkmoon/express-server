@@ -1,10 +1,12 @@
 const express = require("express");
 const addisomFormSchema = require("../../models/aknuform/admissionFrom");
 
+const authenticationMiddleware = require("../../middlewares/authentication")
+
 const addisomFormRouter = express.Router();
 
 // POST request - Create new form entry
-addisomFormRouter.post("/create-new-admission", async (req, res) => {
+addisomFormRouter.post("/create-new-admission" ,async (req, res) => {
   try {
     const newForm = new addisomFormSchema(req.body);
     const savedForm = await newForm.save();
@@ -15,7 +17,7 @@ addisomFormRouter.post("/create-new-admission", async (req, res) => {
 });
 
 // GET request - Get all form entries
-addisomFormRouter.get("/", async (req, res) => {
+addisomFormRouter.get("/", authenticationMiddleware,async (req, res) => {
   try {
     const forms = await addisomFormSchema.find();
     res.status(200).json(forms);
@@ -24,7 +26,7 @@ addisomFormRouter.get("/", async (req, res) => {
   }
 });
 // PUT request to update decision status
-addisomFormRouter.put("/update-decision/:id", async (req, res) => {
+addisomFormRouter.put("/update-decision/:id",authenticationMiddleware ,async (req, res) => {
   try {
     const { id } = req.params;
     const { action } = req.query;

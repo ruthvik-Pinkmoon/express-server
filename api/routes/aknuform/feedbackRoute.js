@@ -1,6 +1,7 @@
 const express = require('express');
 const feedbackRoute = express.Router();
 const FeedbackForm = require('../../models/aknuform/feedbackForm');
+const authenticationMiddleware = require('../../middlewares/authentication');
 
 // POST Route: Submit Feedback
 feedbackRoute.post('/submit-feedback', async (req, res) => {
@@ -15,7 +16,7 @@ feedbackRoute.post('/submit-feedback', async (req, res) => {
 });
 
 // GET Route: Get All Feedbacks
-feedbackRoute.get('/submit-feedback', async (req, res) => {
+feedbackRoute.get('/submit-feedback', authenticationMiddleware,async (req, res) => {
   try {
     const feedbacks = await FeedbackForm.find();
     res.status(200).json(feedbacks);

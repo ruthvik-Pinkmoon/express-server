@@ -2,6 +2,7 @@ const express = require('express');
 const certificateRoutes = express.Router();
 const multer = require('multer');
 const ApplyCertificateForm = require('../../models/aknuform/CertificateFormSchema');
+const authenticationMiddleware = require('../../middlewares/authentication');
 
 // Multer Setup
 const storage = multer.memoryStorage(); // This will store file in buffer
@@ -31,7 +32,7 @@ certificateRoutes.post('/apply-certificate', upload.single('uploadDocuments'), a
 });
 
 // GET Route
-certificateRoutes.get('/apply-certificate', async (req, res) => {
+certificateRoutes.get('/apply-certificate',authenticationMiddleware, async (req, res) => {
   try {
     const forms = await ApplyCertificateForm.find();
     res.status(200).json(forms);
@@ -39,7 +40,7 @@ certificateRoutes.get('/apply-certificate', async (req, res) => {
     res.status(500).json({ message: 'Error fetching applications', error });
   }
 });
-certificateRoutes.get('/file/:id', async (req, res) => {
+certificateRoutes.get('/file/:id' ,async (req, res) => {
     try {
         const formData = await ApplyCertificateForm.findById(req.params.id);
 

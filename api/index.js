@@ -18,6 +18,8 @@ const addisomFormRouter = require("./routes/aknuform/admissionFormRouter");
 const otprouter = require("./routes/chatwithus/otpRoute");
 const chatrouter = require("./routes/chatwithus/chatWithUs");
 const authenticationRouter = require("./routes/authentication/authenticationRoute");
+const feesRouter = require("./routes/fees/feesFormRoute");
+const admissionFeesRouter = require("./routes/fees/admissionFeesRoute");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -56,6 +58,9 @@ app.use("/api/feedback-form",feedbackRoute );
 app.use("/api/otp",otprouter)
 app.use("/api/chat-with-us",chatrouter)
 app.use("/api/authentication", authenticationRouter);
-
+app.use("/api/fees", feesRouter);
+app.use("/api/carousel", require("./routes/carouselRoute"));
+app.use("/api/important-dates", require("./routes/important_datesRoute"));
+app.use("/api/admission-fees", admissionFeesRouter);
 module.exports = app;
 app.listen(3000)

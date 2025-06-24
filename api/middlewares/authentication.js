@@ -3,24 +3,27 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/authentication/authenticationSchema');
 
 const authenticationMiddleware = async (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
-
-  if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select('-password');
+    const authHeader = req.headers['authorization'];
 
-    if (!req.user) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+
+    if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    next(); // Go to the next middleware or route
+    req.user = user; // Attach user to request
+    next(); // Continue to next middleware or route handler
+
   } catch (error) {
-    res.status(400).json({ message: 'Invalid token.', error: error.message });
+    return res.status(401).json({ message: 'Invalid or expired token.', error: error.message });
   }
 };
 

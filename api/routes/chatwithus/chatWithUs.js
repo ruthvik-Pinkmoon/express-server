@@ -1,6 +1,7 @@
 const express = require("express");
 const chatrouter = express.Router();
 const ChatWithUs = require("../../models/chatwithus/chatWithUs");
+const authenticationMiddleware = require("../../middlewares/authentication");
 
 chatrouter.post("/details", async (req, res) => {
   try {
@@ -38,7 +39,7 @@ chatrouter.post("/details", async (req, res) => {
   }
 });
 // GET /details
-chatrouter.get("/", async (req, res) => {
+chatrouter.get("/",authenticationMiddleware, async (req, res) => {
   try {
     const entries = await ChatWithUs.find();
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const alumniRoute = express.Router();
-const AlumniRegistrationForm = require('../../models/aknuform/alumniRegistrationForm')
+const AlumniRegistrationForm = require('../../models/aknuform/alumniRegistrationForm');
+const authenticationMiddleware = require('../../middlewares/authentication');
 
 // POST Route: Register Alumni
 alumniRoute.post('/alumni-registration', async (req, res) => {
@@ -15,7 +16,7 @@ alumniRoute.post('/alumni-registration', async (req, res) => {
 });
 
 // GET Route: Get all Alumni
-alumniRoute.get('/alumni-registration', async (req, res) => {
+alumniRoute.get('/alumni-registration', authenticationMiddleware,async (req, res) => {
   try {
     const alumniList = await AlumniRegistrationForm.find();
     res.status(200).json(alumniList);
