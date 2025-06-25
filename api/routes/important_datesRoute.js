@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const ImportantDate = require('../models/important_dates');
+const authenticationMiddleware = require('../middlewares/authentication');
 const importantDatesRouter = express.Router();
 
 // POST route to create a new important date entry
-importantDatesRouter.post('/', async (req, res) => {
+importantDatesRouter.post('/', authenticationMiddleware,async (req, res) => {
     try {
         const { color, date, title, program, description } = req.body;
     
@@ -39,7 +40,7 @@ importantDatesRouter.get('/', async (req, res) => {
 });
 
 // PUT route to update an important date entry by ID
-importantDatesRouter.put('/:id', async (req, res) => {
+importantDatesRouter.put('/:id',authenticationMiddleware ,async (req, res) => {
     try {
         const { color, date, title, program, description } = req.body;
 
@@ -65,7 +66,7 @@ importantDatesRouter.put('/:id', async (req, res) => {
 });
 
 // DELETE route to delete an important date entry by ID
-importantDatesRouter.delete('/:id', async (req, res) => {
+importantDatesRouter.delete('/:id',authenticationMiddleware, async (req, res) => {
     try {
         const deletedImportantDate = await ImportantDate.findByIdAndDelete(req.params.id);
 

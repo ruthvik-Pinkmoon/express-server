@@ -1,12 +1,13 @@
 const express = require("express");
 const multer = require("multer");
 const Carousel = require("../models/carouselModal");
+const authenticationMiddleware = require("../middlewares/authentication");
 
 const carouselRouter = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // POST: Add a new carousel item (with file upload)
-carouselRouter.post("/", upload.single("img"), async (req, res) => {
+carouselRouter.post("/", authenticationMiddleware,upload.single("img"), async (req, res) => {
   try {
     const { title, alignno } = req.body;
     // Check for duplicate alignno
@@ -41,7 +42,7 @@ carouselRouter.get("/", async (req, res) => {
 });
 
 // PUT: Update a carousel item by id (with optional file upload)
-carouselRouter.put("/:id", upload.single("img"), async (req, res) => {
+carouselRouter.put("/:id",authenticationMiddleware, upload.single("img"), async (req, res) => {
   try {
     const { title, alignno } = req.body;
     // Check for duplicate alignno (excluding self)
@@ -70,7 +71,7 @@ carouselRouter.put("/:id", upload.single("img"), async (req, res) => {
 });
 
 // DELETE: Delete a carousel item by id and re-align others
-carouselRouter.delete("/:id", async (req, res) => {
+carouselRouter.delete("/:id",authenticationMiddleware, async (req, res) => {
   try {
     const toDelete = await Carousel.findById(req.params.id);
     if (!toDelete)

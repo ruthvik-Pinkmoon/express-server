@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const eventSchema = require("../models/LatestEvents.js");
+const authenticationMiddleware = require("../middlewares/authentication.js");
 
 const eventRoute = express.Router();
 
@@ -58,7 +59,7 @@ eventRoute.get("/file/:id", async (req, res) => {
 });
 
 // CREATE new event (already done, here for reference)
-eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => {
+eventRoute.post("/create-new-event",authenticationMiddleware, upload.single("file"), async (req, res) => {
   try {
     const { title,location,isImportant, description ,date} = req.body;
 
@@ -89,7 +90,7 @@ eventRoute.post("/create-new-event", upload.single("file"), async (req, res) => 
 });
 
 // UPDATE event
-eventRoute.put("/update-event/:id", upload.single("file"), async (req, res) => {
+eventRoute.put("/update-event/:id",authenticationMiddleware ,upload.single("file"), async (req, res) => {
   try {
     const { title,isImportant,location,description,date } = req.body;
 
@@ -124,7 +125,7 @@ eventRoute.put("/update-event/:id", upload.single("file"), async (req, res) => {
 
 
 // DELETE event
-eventRoute.delete("/delete-event/:id", async (req, res) => {
+eventRoute.delete("/delete-event/:id",authenticationMiddleware ,async (req, res) => {
   try {
     const deletedevent = await eventSchema.findByIdAndDelete(req.params.id);
 

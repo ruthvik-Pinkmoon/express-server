@@ -33,7 +33,7 @@ const upload = multer({
 });
 
 // GET all notifications
-notificationrouter.get("/",authenticationMiddleware,async (req, res) => {
+notificationrouter.get("/",async (req, res) => {
   try {
     const notifications = await notificationSchema.find().sort({ date: -1 });
     res.status(200).json({ success: true, data: notifications });
