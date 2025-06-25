@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const newsSchema = require("../models/LatestNews.js");
+const authenticationMiddleware = require("../middlewares/authentication.js");
 
 const newsRoute = express.Router();
 
@@ -24,7 +25,7 @@ const upload = multer({
 });
 
 // GET all newss
-newsRoute.get("/", async (req, res) => {
+newsRoute.get("/" ,async (req, res) => {
   try {
     const newss = await newsSchema.find().sort({ date: -1 });
     res.status(200).json({ success: true, data: newss });
@@ -50,9 +51,9 @@ newsRoute.get("/file/:id", async (req, res) => {
 });
 
 // CREATE new news (already done, here for reference)
-newsRoute.post("/create-new-news", upload.single("file"), async (req, res) => {
+newsRoute.post("/create-new-news", authenticationMiddleware,upload.single("file"), async (req, res) => {
   try {
-    const { title, description,isImportant, date } = req.body;
+    const { title, description, isImportant, date } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded." });
@@ -60,7 +61,7 @@ newsRoute.post("/create-new-news", upload.single("file"), async (req, res) => {
 
     const newnews = new newsSchema({
       title,
-     isImportant,
+      isImportant,
       description,
       date: new Date(date),
       file: {
@@ -82,11 +83,16 @@ newsRoute.post("/create-new-news", upload.single("file"), async (req, res) => {
 });
 
 // UPDATE news
-newsRoute.put("/update-news/:id", upload.single("file"), async (req, res) => {
+newsRoute.put("/update-news/:id",authenticationMiddleware ,upload.single("file"), async (req, res) => {
   try {
-    const { title,isImportant, description, date } = req.body;
+    const { title, isImportant, description, date } = req.body;
 
-    const updateData = { title,isImportant,description, date: new Date(date) };
+    const updateData = {
+      title,
+      isImportant,
+      description,
+      date: new Date(date),
+    };
 
     if (req.file) {
       // Only if new file is uploaded
@@ -107,13 +113,11 @@ newsRoute.put("/update-news/:id", upload.single("file"), async (req, res) => {
       return res.status(404).json({ error: "news not found." });
     }
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "news updated successfully.",
-        data: updatednews,
-      });
+    res.status(200).json({
+      success: true,
+      message: "news updated successfully.",
+      data: updatednews,
+    });
   } catch (err) {
     console.error("Update Error:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -121,7 +125,7 @@ newsRoute.put("/update-news/:id", upload.single("file"), async (req, res) => {
 });
 
 // DELETE news
-newsRoute.delete("/delete-news/:id", async (req, res) => {
+newsRoute.delete("/delete-news/:id", authenticationMiddleware,async (req, res) => {
   try {
     const deletednews = await newsSchema.findByIdAndDelete(req.params.id);
 

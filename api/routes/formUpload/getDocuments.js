@@ -5,19 +5,31 @@ const { MongoClient } = require("mongodb");
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-const client = new MongoClient(process.env.MONGO_DB);
-const MONDODB_DB_NAME = "myDatabase"; // Replace with your actual database name
-const MONGO_DB_COLLECTION = "myCollection"; // Replace with your actual collection name
+const uri = process.env.MONGO_DB;
+const MONDODB_DB_NAME = "myDatabase";
+const MONGO_DB_COLLECTION = "myCollection";
+
+const client = new MongoClient(uri);
+let isConnected = false;
+
+async function connectClient() {
+  if (!isConnected) {
+    await client.connect();
+    isConnected = true;
+    console.log("✅ MongoDB Connected Once");
+  }
+}
 
 router.post("/", upload.any(), async (req, res) => {
-  console.log("___coneectiom success");
-  
+  console.log("📩 Request received");
+
   const { limit, startDate, endDate, name, mobileNumber } = req.body;
 
   try {
-    await client.connect();
+    await connectClient();
     const db = client.db(MONDODB_DB_NAME);
     const collection = db.collection(MONGO_DB_COLLECTION);
+
     const query = {};
     const orConditions = [];
 
@@ -44,16 +56,16 @@ router.post("/", upload.any(), async (req, res) => {
     const docs = await collection
       .find(query)
       .sort({ _id: -1 })
-      .limit(limit || 50)
+      .limit(Number(limit) || 50)
       .toArray();
-      console.log("Documents fetched:", docs.length);
+
+    console.log("📦 Documents fetched:", docs.length);
     res.status(200).json({ success: true, data: docs });
   } catch (err) {
-    console.error("Fetch Error:", err);
+    console.error("❌ Fetch Error:", err);
     res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    await client.close();
   }
+  // Don't close the client here!
 });
 
 module.exports = router;
