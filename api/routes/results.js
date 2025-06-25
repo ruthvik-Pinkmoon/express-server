@@ -5,12 +5,13 @@ const fs = require('fs');
 const path = require('path');
 const ResultBatch = require('../models/ResultBatch');
 const StudentResult = require('../models/StudentResult');
+const authenticationMiddleware = require('../middlewares/authentication');
 
 const upload = multer({ dest: 'uploads/' });
 
 const resultsRouter = express.Router();
 
-resultsRouter.post('/upload', upload.single('file'), async (req, res) => {
+resultsRouter.post('/upload',authenticationMiddleware, upload.single('file'), async (req, res) => {
   try {
     const { title, level, resultDate } = req.body;
     const filePath = req.file?.path;
@@ -103,6 +104,38 @@ resultsRouter.post('/upload', upload.single('file'), async (req, res) => {
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({ error: "Error processing file. Check logs." });
+  }
+});
+
+resultsRouter.get("/", async (req, res) => {
+  try {
+    const { title, hallticket } = req.query;
+
+    if (!title) {
+      return res.status(400).json({ error: "Missing title (result batch name)" });
+    }
+
+    const batch = await ResultBatch.findOne({ title });
+    if (!batch) {
+      return res.status(404).json({ error: "Result batch not found" });
+    }
+
+    const query = { resultBatch: batch._id };
+
+    if (hallticket) {
+      query.hallticket = hallticket;
+    }
+
+    const results = await StudentResult.find(query).select("-__v").lean();
+
+    res.status(200).json({
+      resultBatch: title,
+      totalResults: results.length,
+      results,
+    });
+  } catch (error) {
+    console.error("GET /results error:", error);
+    res.status(500).json({ error: "Server error while fetching results" });
   }
 });
 
