@@ -6,7 +6,7 @@ const allowedOrigins = [
   ADMIN_URL,
   LOCAL_ENV,
   "http://localhost:5173",
-   "http://localhost:5174",
+  "http://localhost:5174",
 ];
 
 // const corsMiddleware = cors({
@@ -20,8 +20,13 @@ const allowedOrigins = [
 //   credentials: true,
 // });
 
+// const corsMiddleware = cors({
+//   origin: true,
+//   credentials: true,
+// });
+
 const corsMiddleware = cors({
-  origin: true,
+  origin: "*",
   credentials: true,
 });
 
