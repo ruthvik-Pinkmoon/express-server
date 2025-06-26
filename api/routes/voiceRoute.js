@@ -1,9 +1,10 @@
 const express = require("express");
 const voiceRoute = express.Router();
 const voiceSchema = require("../models/Voices.js");
+const authenticationMiddleware = require("../middlewares/authentication.js");
 
 // CREATE – Add a new voice
-voiceRoute.post("/create-new-voice", async (req, res) => {
+voiceRoute.post("/create-new-voice",authenticationMiddleware, async (req, res) => {
     try {
         const newVoice = new voiceSchema(req.body);
         const savedVoice = await newVoice.save();
@@ -39,7 +40,7 @@ voiceRoute.get("/:id", async (req, res) => {
 });
 
 // UPDATE – Update voice by ID
-voiceRoute.put("/update-new-voice/:id", async (req, res) => {
+voiceRoute.put("/update-new-voice/:id",authenticationMiddleware ,async (req, res) => {
     try {
         const updatedVoice = await voiceSchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedVoice) return res.status(404).json({ success: false, error: "Voice not found" });
@@ -52,7 +53,7 @@ voiceRoute.put("/update-new-voice/:id", async (req, res) => {
 });
 
 // DELETE – Delete voice by ID
-voiceRoute.delete("/delete-new-voice/:id", async (req, res) => {
+voiceRoute.delete("/delete-new-voice/:id", authenticationMiddleware,async (req, res) => {
     try {
         const deletedVoice = await voiceSchema.findByIdAndDelete(req.params.id);
         if (!deletedVoice) return res.status(404).json({ success: false, error: "Voice not found" });

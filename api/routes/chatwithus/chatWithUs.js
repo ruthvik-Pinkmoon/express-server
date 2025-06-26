@@ -39,7 +39,7 @@ chatrouter.post("/details", async (req, res) => {
   }
 });
 // GET /details
-chatrouter.get("/",authenticationMiddleware, async (req, res) => {
+chatrouter.get("/", async (req, res) => {
   try {
     const entries = await ChatWithUs.find();
 
