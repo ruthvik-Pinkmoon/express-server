@@ -27,7 +27,7 @@ const allowedOrigins = [
 
 const corsMiddleware = cors({
   origin: "*",
-  credentials: true,
+  // credentials: true,
 });
 
 module.exports = corsMiddleware;
