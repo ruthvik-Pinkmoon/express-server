@@ -100,4 +100,28 @@ resultRouter.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: "Server error during file processing" });
   }
 });
+
+resultRouter.get("/get-results", async (req, res) => {
+  try {
+    const { level, regno, sem } = req.query;
+
+    if (!level || !regno || !sem) {
+      return res.status(400).json({
+        error: "Missing required query params: level, regno, or sem"
+      });
+    }
+
+    const results = await Result.find({
+      Level: level,
+      RegisterNumber: regno,
+      Semester: sem
+    });
+
+    res.status(200).json({ data: results });
+  } catch (err) {
+    console.error("GET /get error:", err);
+    res.status(500).json({ error: "Server error fetching results" });
+  }
+});
+
 module.exports = resultRouter;
