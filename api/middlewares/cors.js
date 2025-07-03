@@ -5,6 +5,8 @@ const allowedOrigins = [
   CLIENT_URL,
   ADMIN_URL,
   LOCAL_ENV,
+  "https://new.aknu.edu.in",
+  "http://admin.aknu.edu.in",
   "http://localhost:5173",
   "http://localhost:5174",
 ];
