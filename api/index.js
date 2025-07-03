@@ -27,8 +27,8 @@ const resultsRouter = require("./routes/results");
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
-// app.use(cors());
-app.use(corsMiddleware)
+app.use(cors());
+// app.use(corsMiddleware)
 
 mongoose
   .connect(process.env.MONGO_DB, {
