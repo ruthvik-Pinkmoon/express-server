@@ -7,8 +7,10 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const client = new MongoClient(process.env.MONGO_DB);
 const CLIENT_DOMAIN = process.env.CLIENT_DOMAIN;
-const MONDODB_DB_NAME = process.env.MONDODB_DB_NAME;
-const MONGO_DB_COLLECTION = process.env.MONGO_DB_COLLECTION;
+// const MONDODB_DB_NAME = process.env.MONDODB_DB_NAME;
+// const MONGO_DB_COLLECTION = process.env.MONGO_DB_COLLECTION;
+const MONDODB_DB_NAME = "myDatabase";
+const MONGO_DB_COLLECTION = "myCollection";
 
 router.post("/", upload.any(), async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", CLIENT_DOMAIN);
