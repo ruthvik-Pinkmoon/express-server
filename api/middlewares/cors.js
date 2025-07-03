@@ -28,7 +28,7 @@ const allowedOrigins = [
 // });
 
 const corsMiddleware = cors({
-  origin: allowedOrigins,
+origin: ["http://localhost:5173","http://localhost:5174","https://new.aknu.edu.in","https://admin.aknu.edu.in"],
   // credentials: true,
 });
 
