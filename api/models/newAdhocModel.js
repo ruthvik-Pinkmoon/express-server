@@ -79,6 +79,8 @@ const FormSchema = new mongoose.Schema({
   setQualified: String,
   setSubject: String,
   setYear: String,
+  hasFIR :String,
+  firDescription :String,
   otherQualification: String,
   workExperience: String,
   experienceDetails: String,
