@@ -23,11 +23,13 @@ const admissionFeesRouter = require("./routes/fees/admissionFeesRoute");
 const galleryRouter = require("./routes/galleryRoute");
 const ResultBatch = require("./models/ResultBatch");
 const resultsRouter = require("./routes/results");
+const adhocRoute = require("./routes/formUpload/newFormUpload");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
 app.use(cors());
+
 // app.use(corsMiddleware)
 
 mongoose
@@ -67,6 +69,7 @@ app.use("/api/important-dates", require("./routes/important_datesRoute"));
 app.use("/api/admission-fees", admissionFeesRouter);
 app.use("/api/gallery",galleryRouter);
 app.use("/api/results",resultsRouter)
+app.use("/api/adhoc-upload",adhocRoute)
 
 module.exports = app;
 app.listen(3000)
